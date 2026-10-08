@@ -182,7 +182,7 @@ rsvpForm.addEventListener("submit", function (event) {
 
 
     /* =================================================
-       CREATE FORM TO SEND TO GOOGLE
+       CREATE GOOGLE FORM
     ================================================= */
 
     const googleForm =
@@ -233,8 +233,21 @@ rsvpForm.addEventListener("submit", function (event) {
     attendanceInput.name =
         "entry.1802258243";
 
-    attendanceInput.value =
-        attendance.value;
+    /*
+       Google Form's exact saved option
+    */
+
+    if (attendance.value === "نعم") {
+
+        attendanceInput.value =
+            "نعم ساحضر";
+
+    } else {
+
+        attendanceInput.value =
+            "أعتذر عن الحضور";
+
+    }
 
     googleForm.appendChild(attendanceInput);
 
@@ -278,7 +291,7 @@ rsvpForm.addEventListener("submit", function (event) {
 
 
     /* =================================================
-       SEND
+       SEND TO GOOGLE FORMS
     ================================================= */
 
     document.body.appendChild(googleForm);
@@ -294,7 +307,7 @@ rsvpForm.addEventListener("submit", function (event) {
         "تم تأكيد حضوركم بنجاح 🤍";
 
 
-    /* CLEAR FORM */
+    /* CLEAR RSVP FORM */
 
     rsvpForm.reset();
 
