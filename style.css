@@ -1431,4 +1431,110 @@ body {
         min-height: 480px;
     }
 
+    /* =====================================================
+   IMPORTANT NOTES PAGE
+===================================================== */
+
+.notes-page {
+    position: relative;
+    text-align: center;
+    padding: 80px 25px;
+    background: #F7F1E7;
+}
+
+
+.notes-page h1 {
+    color: #C99A9D;
+    font-family: "Aref Ruqaa", serif;
+    font-size: clamp(38px, 9vw, 58px);
+    font-weight: 400;
+    margin: 10px 0 45px;
+    line-height: 1.4;
+}
+
+
+.notes-content {
+    width: min(100%, 650px);
+    margin: 0 auto;
+}
+
+
+.note-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.note-icon {
+    color: #C99A9D;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 18px;
+}
+
+
+.note-item p {
+    margin: 0 auto;
+    max-width: 580px;
+    color: #2F2925;
+    font-family: "Aref Ruqaa", serif;
+    font-size: clamp(19px, 4.5vw, 25px);
+    line-height: 2;
+    direction: rtl;
+}
+
+
+.note-item p strong {
+    color: #A96870;
+    font-weight: 700;
+}
+
+
+.note-item span {
+    display: block;
+    margin-top: 22px;
+    color: #A96870;
+    font-family: "Aref Ruqaa", serif;
+    font-size: clamp(19px, 4vw, 24px);
+    line-height: 1.8;
+}
+
+
+.note-divider {
+    width: 100%;
+    margin: 42px auto;
+    color: #B89A5A;
+    font-size: 18px;
+    letter-spacing: 8px;
+}
+
+
+@media (max-width: 600px) {
+
+    .notes-page {
+        padding: 65px 22px;
+    }
+
+    .notes-page h1 {
+        margin-bottom: 35px;
+    }
+
+    .note-item p {
+        font-size: 19px;
+        line-height: 2.05;
+    }
+
+    .note-item span {
+        font-size: 19px;
+    }
+
+    .note-divider {
+        margin: 35px auto;
+    }
+
+}
+
 }
