@@ -114,12 +114,13 @@ setInterval(updateCountdown, 1000);
 
 
 /* =====================================================
-   RSVP → GOOGLE FORMS / GOOGLE SHEETS
+   RSVP → GOOGLE APPS SCRIPT → GOOGLE FORMS → SHEETS
 ===================================================== */
 
 const rsvpForm = document.getElementById("rsvpForm");
 
-rsvpForm.addEventListener("submit", function (event) {
+
+rsvpForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -146,7 +147,9 @@ rsvpForm.addEventListener("submit", function (event) {
         document.getElementById("formMessage");
 
 
-    /* CHECK REQUIRED FIELDS */
+    /* =================================================
+       CHECK REQUIRED FIELDS
+    ================================================= */
 
     if (!name || !attendance) {
 
@@ -158,168 +161,109 @@ rsvpForm.addEventListener("submit", function (event) {
 
 
     /* =================================================
-       GOOGLE FORM URL
+       GOOGLE APPS SCRIPT WEB APP
     ================================================= */
 
-    const googleFormURL =
-        "https://docs.google.com/forms/d/e/1FAIpQLScRIxMUIhDe12LPBh18DtRmNyZZH60O00F6iJzrocrDrFfoSg/formResponse";
+    const scriptURL =
+        "https://script.google.com/macros/s/AKfycbzRmedjGUBioW0RTrEPgBSM7MdjswR4C2gJsR1xXzsKRhV_nGvao5C_6ho8eVs-HbQ6/exec";
 
 
     /* =================================================
-       CREATE HIDDEN IFRAME
+       PREVENT DOUBLE SUBMISSION
     ================================================= */
 
-    const iframe =
-        document.createElement("iframe");
+    const sendButton =
+        rsvpForm.querySelector(".send-button");
 
-    iframe.name =
-        "google-form-hidden";
+    sendButton.disabled = true;
 
-    iframe.style.display =
-        "none";
-
-    document.body.appendChild(iframe);
+    sendButton.textContent = "جاري الإرسال...";
 
 
     /* =================================================
-       CREATE GOOGLE FORM
+       PREPARE DATA
     ================================================= */
 
-    const googleForm =
-        document.createElement("form");
+    const data = new URLSearchParams();
 
-    googleForm.action =
-        googleFormURL;
 
-    googleForm.method =
-        "POST";
+    data.append(
+        "name",
+        name
+    );
 
-    googleForm.target =
-        "google-form-hidden";
 
-    googleForm.style.display =
-        "none";
+    data.append(
+        "attendance",
+        attendance.value
+    );
+
+
+    data.append(
+        "guests",
+        guests
+    );
+
+
+    data.append(
+        "message",
+        message
+    );
 
 
     /* =================================================
-       NAME
+       SEND TO GOOGLE APPS SCRIPT
     ================================================= */
 
-    const nameInput =
-        document.createElement("input");
+    try {
 
-    nameInput.type =
-        "hidden";
+        await fetch(scriptURL, {
 
-    nameInput.name =
-        "entry.1525417623";
+            method: "POST",
 
-    nameInput.value =
-        name;
+            mode: "no-cors",
 
-    googleForm.appendChild(nameInput);
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+
+            body: data.toString()
+
+        });
 
 
-    /* =================================================
-       ATTENDANCE
-    ================================================= */
+        /* =================================================
+           SUCCESS
+        ================================================= */
 
-    const attendanceInput =
-        document.createElement("input");
+        formMessage.textContent =
+            "🤍 تم تأكيد حضوركم بنجاح ";
 
-    attendanceInput.type =
-        "hidden";
 
-    attendanceInput.name =
-        "entry.1802258243";
+        rsvpForm.reset();
 
-    /*
-       Google Form's exact saved option
-    */
 
-    if (attendance.value === "نعم") {
+    } catch (error) {
 
-        attendanceInput.value =
-            "نعم ساحضر";
+        console.error(
+            "RSVP Error:",
+            error
+        );
 
-    } else {
 
-        attendanceInput.value =
-            "أعتذر عن الحضور";
+        formMessage.textContent =
+            "حدث خطأ، يرجى المحاولة مرة أخرى.";
 
     }
 
-    googleForm.appendChild(attendanceInput);
-
 
     /* =================================================
-       NUMBER OF GUESTS
+       RESTORE BUTTON
     ================================================= */
 
-    const guestsInput =
-        document.createElement("input");
+    sendButton.disabled = false;
 
-    guestsInput.type =
-        "hidden";
-
-    guestsInput.name =
-        "entry.1824842101";
-
-    guestsInput.value =
-        guests;
-
-    googleForm.appendChild(guestsInput);
-
-
-    /* =================================================
-       MESSAGE
-    ================================================= */
-
-    const messageInput =
-        document.createElement("input");
-
-    messageInput.type =
-        "hidden";
-
-    messageInput.name =
-        "entry.799579534";
-
-    messageInput.value =
-        message;
-
-    googleForm.appendChild(messageInput);
-
-
-    /* =================================================
-       SEND TO GOOGLE FORMS
-    ================================================= */
-
-    document.body.appendChild(googleForm);
-
-    googleForm.submit();
-
-
-    /* =================================================
-       SUCCESS MESSAGE
-    ================================================= */
-
-    formMessage.textContent =
-        "تم تأكيد حضوركم بنجاح 🤍";
-
-
-    /* CLEAR RSVP FORM */
-
-    rsvpForm.reset();
-
-
-    /* CLEAN UP */
-
-    setTimeout(function () {
-
-        googleForm.remove();
-
-        iframe.remove();
-
-    }, 3000);
+    sendButton.textContent = "إرسال";
 
 });
